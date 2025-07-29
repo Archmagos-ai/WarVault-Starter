@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract WarVaultToken is ERC20, Ownable {
     constructor(uint256 initialSupply) 
         ERC20("WarVault Token", "WAR") 
-        Ownable(msg.sender) 
+        Ownable(msg.sender)  // Pass initialOwner here
     {
         _mint(msg.sender, initialSupply);
     }
