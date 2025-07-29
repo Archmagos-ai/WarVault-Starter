@@ -9,26 +9,26 @@ describe("WarVault", function () {
 
     // Deploy WAR token
     Token = await ethers.getContractFactory("WarVaultToken");
-    token = await Token.deploy(ethers.parseEther("1000000"));
-    await token.deployed();
+    token = await Token.deploy(ethers.parseEther("1000000")); // v6 style
+    await token.waitForDeployment();
 
     // Deploy Vault
     Vault = await ethers.getContractFactory("WarVaultVault");
-    vault = await Vault.deploy(token.address);
-    await vault.deployed();
+    vault = await Vault.deploy(await token.getAddress());
+    await vault.waitForDeployment();
 
     // Mint tokens to user for testing
     await token.transfer(user.address, ethers.parseEther("100"));
   });
 
   it("should allow deposits", async function () {
-    await token.connect(user).approve(vault.address, ethers.parseEther("50"));
+    await token.connect(user).approve(await vault.getAddress(), ethers.parseEther("50"));
     await vault.connect(user).deposit(ethers.parseEther("50"));
     expect(await vault.getBalance(user.address)).to.equal(ethers.parseEther("50"));
   });
 
   it("should allow withdrawals", async function () {
-    await token.connect(user).approve(vault.address, ethers.parseEther("50"));
+    await token.connect(user).approve(await vault.getAddress(), ethers.parseEther("50"));
     await vault.connect(user).deposit(ethers.parseEther("50"));
     await vault.connect(user).withdraw(ethers.parseEther("50"));
     expect(await vault.getBalance(user.address)).to.equal(0);
