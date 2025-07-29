@@ -1,0 +1,13 @@
+{
+  "name": "warvault-starter",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "npx hardhat test",
+    "deploy": "npx hardhat run scripts/deploy.js --network hardhat"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "hardhat": "^2.22.0"
+  }
+}
