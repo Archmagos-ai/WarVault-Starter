@@ -1,36 +1,36 @@
 const { expect } = require("chai");
-const { ethers } = require("hardhat");
+const hre = require("hardhat");
 
 describe("WarVault", function () {
-  let Token, token, Vault, vault, owner, user;
+  let token, vault, owner, user;
 
   beforeEach(async function () {
-    [owner, user] = await ethers.getSigners();
+    [owner, user] = await hre.ethers.getSigners();
 
     // Deploy WAR token
-    Token = await ethers.getContractFactory("WarVaultToken");
-    token = await Token.deploy(ethers.parseEther("1000000")); // v6 style
+    const Token = await hre.ethers.getContractFactory("WarVaultToken");
+    token = await Token.deploy(hre.ethers.parseEther("1000000"));
     await token.waitForDeployment();
 
     // Deploy Vault
-    Vault = await ethers.getContractFactory("WarVaultVault");
+    const Vault = await hre.ethers.getContractFactory("WarVaultVault");
     vault = await Vault.deploy(await token.getAddress());
     await vault.waitForDeployment();
 
-    // Mint tokens to user for testing
-    await token.transfer(user.address, ethers.parseEther("100"));
+    // Transfer tokens to user
+    await token.transfer(user.address, hre.ethers.parseEther("100"));
   });
 
   it("should allow deposits", async function () {
-    await token.connect(user).approve(await vault.getAddress(), ethers.parseEther("50"));
-    await vault.connect(user).deposit(ethers.parseEther("50"));
-    expect(await vault.getBalance(user.address)).to.equal(ethers.parseEther("50"));
+    await token.connect(user).approve(await vault.getAddress(), hre.ethers.parseEther("50"));
+    await vault.connect(user).deposit(hre.ethers.parseEther("50"));
+    expect(await vault.getBalance(user.address)).to.equal(hre.ethers.parseEther("50"));
   });
 
   it("should allow withdrawals", async function () {
-    await token.connect(user).approve(await vault.getAddress(), ethers.parseEther("50"));
-    await vault.connect(user).deposit(ethers.parseEther("50"));
-    await vault.connect(user).withdraw(ethers.parseEther("50"));
+    await token.connect(user).approve(await vault.getAddress(), hre.ethers.parseEther("50"));
+    await vault.connect(user).deposit(hre.ethers.parseEther("50"));
+    await vault.connect(user).withdraw(hre.ethers.parseEther("50"));
     expect(await vault.getBalance(user.address)).to.equal(0);
   });
 });
