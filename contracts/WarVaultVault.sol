@@ -8,9 +8,10 @@ contract WarVaultVault is Ownable {
     IERC20 public depositToken;
     mapping(address => uint256) public balances;
 
-    constructor(address _depositToken) {
-        depositToken = IERC20(_depositToken);
-    }
+    constructor(address _depositToken) Ownable(msg.sender) {
+    depositToken = IERC20(_depositToken);
+}
+
 
     function deposit(uint256 amount) external {
         require(amount > 0, "Amount must be > 0");
